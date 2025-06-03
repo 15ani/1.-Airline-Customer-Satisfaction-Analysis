@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Airline Booking Prediction</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      padding: 2rem;
+      max-width: 700px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.4rem;
+      margin-top: 0.3rem;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+    }
+    button {
+      margin-top: 2rem;
+      width: 100%;
+      padding: 1rem;
+      background-color: #ff6f91;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #ff3c61;
+    }
+    .result {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    canvas {
+      margin-top: 2rem;
+      background: #fff;
+      border-radius: 10px;
+      padding: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Airline Booking Prediction</h1>
+  
+  <form id="predictForm">
+    <label for="Gender">Gender (0=Female, 1=Male)</label>
+    <select id="Gender" name="Gender" required>
+      <option value="0">Female</option>
+      <option value="1">Male</option>
+    </select>
+
+    <label for="CustomerType">Customer Type (0=Disloyal, 1=Loyal)</label>
+    <select id="CustomerType" name="Customer Type" required>
+      <option value="0">Disloyal Customer</option>
+      <option value="1">Loyal Customer</option>
+    </select>
+
+    <label for="Age">Age</label>
+    <input type="number" id="Age" name="Age" min="18" max="100" required />
+
+    <label for="TypeOfTravel">Type of Travel (0=Business, 1=Personal)</label>
+    <select id="TypeOfTravel" name="Type of Travel" required>
+      <option value="0">Business</option>
+      <option value="1">Personal</option>
+    </select>
+
+    <label for="Class">Class (0=Economy, 1=Business, 2=Eco Plus)</label>
+    <select id="Class" name="Class" required>
+      <option value="0">Economy</option>
+      <option value="1">Business</option>
+      <option value="2">Eco Plus</option>
+    </select>
+
+    <label for="FlightDistance">Flight Distance</label>
+    <input type="number" id="FlightDistance" name="Flight Distance" min="0" required />
+
+    <!-- Add more inputs for other features similarly... -->
+
+    <label for="InflightWifiService">Inflight wifi service (1-5)</label>
+    <input type="number" id="InflightWifiService" name="Inflight wifi service" min="1" max="5" required />
+
+    <label for="DepartureArrivalTime">Departure/Arrival time convenient (1-5)</label>
+    <input type="number" id="DepartureArrivalTime" name="Departure/Arrival time convenient" min="1" max="5" required />
+
+    <label for="EaseOnlineBooking">Ease of Online booking (1-5)</label>
+    <input type="number" id="EaseOnlineBooking" name="Ease of Online booking" min="1" max="5" required />
+
+    <label for="GateLocation">Gate location (1-5)</label>
+    <input type="number" id="GateLocation" name="Gate location" min="1" max="5" required />
+
+    <label for="FoodAndDrink">Food and drink (1-5)</label>
+    <input type="number" id="FoodAndDrink" name="Food and drink" min="1" max="5" required />
+
+    <label for="OnlineBoarding">Online boarding (1-5)</label>
+    <input type="number" id="OnlineBoarding" name="Online boarding" min="1" max="5" required />
+
+    <label for="SeatComfort">Seat comfort (1-5)</label>
+    <input type="number" id="SeatComfort" name="Seat comfort" min="1" max="5" required />
+
+    <label for="InflightEntertainment">Inflight entertainment (1-5)</label>
+    <input type="number" id="InflightEntertainment" name="Inflight entertainment" min="1" max="5" required />
+
+    <label for="OnBoardService">On-board service (1-5)</label>
+    <input type="number" id="OnBoardService" name="On-board service" min="1" max="5" required />
+
+    <label for="LegRoomService">Leg room service (1-5)</label>
+    <input type="number" id="LegRoomService" name="Leg room service" min="1" max="5" required />
+
+    <label for="BaggageHandling">Baggage handling (1-5)</label>
+    <input type="number" id="BaggageHandling" name="Baggage handling" min="1" max="5" required />
+
+    <label for="CheckinService">Checkin service (1-5)</label>
+    <input type="number" id="CheckinService" name="Checkin service" min="1" max="5" required />
+
+    <label for="InflightService">Inflight service (1-5)</label>
+    <input type="number" id="InflightService" name="Inflight service" min="1" max="5" required />
+
+    <label for="Cleanliness">Cleanliness (1-5)</label>
+    <input type="number" id="Cleanliness" name="Cleanliness" min="1" max="5" required />
+
+    <label for="DepartureDelay">Departure Delay in Minutes</label>
+    <input type="number" id="DepartureDelay" name="Departure Delay in Minutes" min="0" required />
+
+    <label for="ArrivalDelay">Arrival Delay in Minutes</label>
+    <input type="number" id="ArrivalDelay" name="Arrival Delay in Minutes" min="0" required />
+
+    <button type="submit">Predict Booking Satisfaction</button>
+  </form>
+
+  <div class="result" id="result"></div>
+
+  <canvas id="barChart" width="600" height="300"></canvas>
+  <canvas id="pieChart" width="600" height="300"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const form = document.getElementById('predictForm');
+    const resultDiv = document.getElementById('result');
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+
+    let barChart, pieChart;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const data = {};
+      formData.forEach((value, key) => {
+        data[key] = isNaN(value) ? value : Number(value);
+      });
+
+      try {
+        const response = await fetch('http://127.0.0.1:5000/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          resultDiv.textContent = `Prediction: ${result.prediction}`;
+
+          // Sample static data for charts (customize based on your data)
+          const labels = ['Satisfied', 'Neutral or Dissatisfied', 'Dissatisfied'];
+          const counts = [50, 30, 20]; // Example data counts
+
+          // Destroy previous charts if exist
+          if (barChart) barChart.destroy();
+          if (pieChart) pieChart.destroy();
+
+          // Bar Chart
+          barChart = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Customer Satisfaction Distribution',
+                data: counts,
+                backgroundColor: ['#4caf50', '#ff9800', '#f44336'],
+              }]
+            },
+            options: {
+              scales: {
+                y: { beginAtZero: true }
+              }
+            }
+          });
+
+          // Pie Chart
+          pieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Customer Satisfaction Distribution',
+                data: counts,
+                backgroundColor: ['#4caf50', '#ff9800', '#f44336'],
+              }]
+            }
+          });
+        } else {
+          resultDiv.textContent = `Error: ${result.error || 'Unknown error'}`;
+        }
+      } catch (error) {
+        resultDiv.textContent = 'Error connecting to server';
+      }
+    });
+  </script>
+</body>
+</html>
